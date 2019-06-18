@@ -42,36 +42,9 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var graphql_subscriptions_1 = require("graphql-subscriptions");
 var apollo_server_1 = require("apollo-server");
-var deviceClient_1 = require("../api/deviceClient");
+var iot_devices_helper_1 = require("../helper/iot_devices_helper");
 var pubsub = new graphql_subscriptions_1.PubSub();
 var typeDefs = apollo_server_1.gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  extend type Query {\n    \" get all devices \"\n    devices: [IoTHubDeviceType]\n  }\n\n  extend type Mutation {\n    \" add or update an IoT Device \"\n    upsertDevice(input: IoTHubDeviceInputType!): IoTHubDeviceType\n  }\n\n  extend type Subscription {\n    \" called when a new post is created \"\n    deviceUpserted: IoTHubDeviceType\n  }\n\n  \" input to create a new post \"\n  input IoTHubDeviceInputType {\n    text: String\n  }\n  type IoTHubDeviceCapabilitityType{\n    iotEdge: Boolean\n  }\n  type IoTHubDeviceType {\n    deviceId: String\n    generationId: String\n    etag: String\n    connectionState: String\n    status: String\n    statusReason: String\n    connectionStateUpdatedTime: String\n    statusUpdatedTime: String\n    lastActivityTime: String\n    cloudToDeviceMessageCount: Int\n    capabilities: IoTHubDeviceCapabilitityType\n    authentication: IoTHubDeviceAuthenticationType\n  }\n  type IoTHubDeviceKeyPairType{\n    primaryKey: String\n    secondaryKey: String\n  }\n  type IoTHubDeviceAuthenticationType\n  { \n    symmetricKey: IoTHubDeviceKeyPairType\n    x509Thumbprint: IoTHubDeviceThumbprintType\n    type: String\n  }\n  type IoTHubDeviceThumbprintType {\n    primaryThumbprint: String\n    secondaryThumbprint: String\n  }\n"], ["\n  extend type Query {\n    \" get all devices \"\n    devices: [IoTHubDeviceType]\n  }\n\n  extend type Mutation {\n    \" add or update an IoT Device \"\n    upsertDevice(input: IoTHubDeviceInputType!): IoTHubDeviceType\n  }\n\n  extend type Subscription {\n    \" called when a new post is created \"\n    deviceUpserted: IoTHubDeviceType\n  }\n\n  \" input to create a new post \"\n  input IoTHubDeviceInputType {\n    text: String\n  }\n  type IoTHubDeviceCapabilitityType{\n    iotEdge: Boolean\n  }\n  type IoTHubDeviceType {\n    deviceId: String\n    generationId: String\n    etag: String\n    connectionState: String\n    status: String\n    statusReason: String\n    connectionStateUpdatedTime: String\n    statusUpdatedTime: String\n    lastActivityTime: String\n    cloudToDeviceMessageCount: Int\n    capabilities: IoTHubDeviceCapabilitityType\n    authentication: IoTHubDeviceAuthenticationType\n  }\n  type IoTHubDeviceKeyPairType{\n    primaryKey: String\n    secondaryKey: String\n  }\n  type IoTHubDeviceAuthenticationType\n  { \n    symmetricKey: IoTHubDeviceKeyPairType\n    x509Thumbprint: IoTHubDeviceThumbprintType\n    type: String\n  }\n  type IoTHubDeviceThumbprintType {\n    primaryThumbprint: String\n    secondaryThumbprint: String\n  }\n"])));
-function get_devices(connectString) {
-    return __awaiter(this, void 0, void 0, function () {
-        var results, devices;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, deviceClient_1.listDevices(connectString)];
-                case 1:
-                    results = _a.sent();
-                    devices = results.responseBody;
-                    return [2 /*return*/, devices.map(function (x) { return ({
-                            deviceId: x.deviceId,
-                            generationId: x.generationId,
-                            etag: x.etag,
-                            connectionState: x.connectionState,
-                            status: x.status,
-                            statusReason: x.statusReason,
-                            connectionStateUpdatedTime: x.connectionStateUpdatedTime,
-                            statusUpdatedTime: x.statusUpdatedTime,
-                            lastActivityTime: x.lastActivityTime,
-                            cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
-                            capabilities: x.capabilities,
-                            authentication: x.authentication
-                        }); })];
-            }
-        });
-    });
-}
 exports.default = {
     resolvers: {
         Query: {
@@ -79,8 +52,7 @@ exports.default = {
             devices: function (root, _a, _b) {
                 var input = _a.input;
                 var connectionString = _b.connectionString;
-                return get_devices('HostName=michi-vision-ai-kit.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=zJbZb+CgR6Oh/VuJWIFoJBI9Vrs2W/lxAtESs/SXK1A=');
-                //return get_devices(connectionString);
+                return iot_devices_helper_1.list_devices(connectionString);
             },
         },
         Mutation: {

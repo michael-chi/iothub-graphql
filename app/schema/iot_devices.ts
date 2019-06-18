@@ -1,6 +1,6 @@
 import { PubSub } from 'graphql-subscriptions';
 import { gql } from 'apollo-server';
-import {listDevices} from '../api/deviceClient';
+import {list_devices} from '../helper/iot_devices_helper';
 import {Device} from 'azure-iothub';
 
 let pubsub = new PubSub();
@@ -58,31 +58,13 @@ const typeDefs = gql`
   }
 `;
 
-async function get_devices (connectString:string) :Promise<Device[]> {
-  let results = await listDevices(connectString);
-  let devices = results.responseBody;
-  return devices.map(x => ({ 
-    deviceId: x.deviceId,
-    generationId: x.generationId,
-    etag: x.etag,
-    connectionState: x.connectionState,
-    status: x.status,
-    statusReason: x.statusReason,
-    connectionStateUpdatedTime: x.connectionStateUpdatedTime,
-    statusUpdatedTime: x.statusUpdatedTime,
-    lastActivityTime: x.lastActivityTime,
-    cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
-    capabilities: x.capabilities,
-    authentication: x.authentication
-  }));
-}
 
 export default {
   resolvers: {
     Query: {
       // get devices
       devices: (root: any, { input }: any, {connectionString}: any) => {
-        return get_devices(connectionString);
+        return list_devices(connectionString);
       },
     },
     Mutation: {
