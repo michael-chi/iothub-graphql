@@ -4,16 +4,16 @@ import {gql_resolver_query_devices, IoTHubDeviceInputType} from '../../helper/io
 import {Device} from 'azure-iothub';
 import {schema_IotHubDevices} from '../schema/iot_devices_schema';
 import {gql_resolver_query_modules, IoTHubModuleInputType} from '../../helper/iot_modules_helper'
+import { doesNotReject } from 'assert';
 
 let pubsub = new PubSub();
 
 export default {
   resolvers: {
     IoTHubDeviceType: {
-      modules: (parent: any, {input}: any, {connectionString}: any) => 
+      modules: (parent: any, input: any, {connectionString}: any) => 
         {
-          console.log(JSON.stringify(input));
-          return gql_resolver_query_modules(input, connectionString);
+          return gql_resolver_query_modules({deviceId:parent.deviceId, moduleId:''}, connectionString);
         }
     },
     Query: {

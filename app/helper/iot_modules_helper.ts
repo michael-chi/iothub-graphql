@@ -23,10 +23,10 @@ let createGqlType = (modules:Module[]):Module[] => {
 
 let query_modules = async (connectString: string, input:IoTHubModuleInputType): Promise<Module[]> => {
   let registry = iothub.Registry.fromConnectionString(connectString);
-  let result = null;////getModulesOnDevice
+  let result = null;
   
-  if(input.deviceId){
-    if(input.moduleId){
+  if(input.deviceId && input.deviceId){
+    if(input.moduleId && input.moduleId){
       result = await registry.getModule(input.deviceId, input.moduleId);
     }else{
       result = await registry.getModulesOnDevice(input.deviceId);
