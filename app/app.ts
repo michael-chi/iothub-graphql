@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server');
 import { makeExecutableSchema } from 'graphql-tools';
-import { graphqlSchemas } from './graphql';
+import { graphqlSchemas, schema, resolvers } from './graphql';
 import { Config } from 'apollo-server';
 
 let schemas = makeExecutableSchema(graphqlSchemas);

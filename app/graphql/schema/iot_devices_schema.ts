@@ -37,7 +37,6 @@ export let schema_IotHubDevices = gql`
     cloudToDeviceMessageCount: Int
     capabilities: IoTHubDeviceCapabilitityType
     authentication: IoTHubAuthenticationType
+    modules: [IoTHubModuleType]
   }
-  
-
 `;

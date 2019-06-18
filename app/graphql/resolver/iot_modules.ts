@@ -7,6 +7,9 @@ let pubsub = new PubSub();
 
 export default {
   resolvers: {
+    IoTHubModuleType:{
+
+    },
     Query: {
       // get modules
       modules: (root: any, {input}: any, {connectionString}: any) => {
@@ -25,11 +28,7 @@ export default {
           return pubsub.asyncIterator('deviceUpserted');
         },
       },
-    }
-    // ,
-    // Post: {
-    //   user: (post: Partial<GQL.Post>) => getPublicUser(post.userId),
-    // },
+    },
   },
   typeDefs: [schema_IotHubModules],
 };

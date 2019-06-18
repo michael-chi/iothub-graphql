@@ -42,5 +42,6 @@ let query_modules = async (connectString: string, input:IoTHubModuleInputType): 
 }
 
 export async function gql_resolver_query_modules (input:IoTHubModuleInputType, connectString:string) :Promise<Module[]> {
+  console.log(`retrieving modules ${input.deviceId} | ${input.moduleId}`);
   return await query_modules(connectString, input);
 }

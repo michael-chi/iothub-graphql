@@ -15,10 +15,6 @@ export default {
     Subscription: {
         
     }
-    // ,
-    // Post: {
-    //   user: (post: Partial<GQL.Post>) => getPublicUser(post.userId),
-    // },
   },
   typeDefs: [schema_IotHubCommons],
 };

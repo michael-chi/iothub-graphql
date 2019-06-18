@@ -37,13 +37,10 @@ let rawSchemas =  mergeRawSchemas(
       resolvers: {},
     },
     commons,
-    devices,
-    modules
+    modules,
+    devices
   );
 
-// let rawSchemas = mergeRawSchemas(
-//     devices
-// );
 export let schema = rawSchemas.typeDefs;
 export let resolvers = rawSchemas.resolvers;
 export let graphqlSchemas = rawSchemas;
