@@ -23,17 +23,15 @@ extend type Subscription {
 }
 
 type IoTHubModuleType {
-  deviceId: String
-  generationId: String
-  etag: String
-  connectionState: String
-  status: String
-  statusReason: String
-  connectionStateUpdatedTime: String
-  statusUpdatedTime: String
-  lastActivityTime: String
-  cloudToDeviceMessageCount: Int
-  capabilities: IoTHubDeviceCapabilitityType
   authentication: IoTHubAuthenticationType
+  cloudToDeviceMessageCount: String
+  connectionState: String
+  connectionStateUpdatedTime: String
+  deviceId: String
+  etag: String
+  generationId: String
+  lastActivityTime: String
+  managedBy: String
+  moduleId: String
 }
 `;

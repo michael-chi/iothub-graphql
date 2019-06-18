@@ -1,43 +1,46 @@
 let iothub = require('azure-iothub');
-import {Device} from 'azure-iothub';
+import {Device, Module} from 'azure-iothub';
 import {ResultWithHttpResponse, RetryOperation} from 'azure-iot-common';
 
-let createGqlType = (devices:Device[]):Device[] => {
-  return devices.map((x: Device) => ({ 
-    deviceId: x.deviceId,
-    generationId: x.generationId,
-    etag: x.etag,
-    connectionState: x.connectionState,
-    status: x.status,
-    statusReason: x.statusReason,
-    connectionStateUpdatedTime: x.connectionStateUpdatedTime,
-    statusUpdatedTime: x.statusUpdatedTime,
-    lastActivityTime: x.lastActivityTime,
+export class IoTHubModuleInputType {
+  public deviceId: string = '';
+  public moduleId: string = '';
+}
+let createGqlType = (modules:Module[]):Module[] => {
+  return modules.map((x: Module) => ({ 
+    authentication: x.authentication,
     cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
-    capabilities: x.capabilities,
-    authentication: x.authentication
+    connectionState: x.connectionState,
+    connectionStateUpdatedTime: x.connectionStateUpdatedTime,
+    deviceId: x.deviceId,
+    etag: x.etag,
+    generationId: x.generationId,
+    lastActivityTime: x.lastActivityTime,
+    managedBy: x.managedBy,
+    moduleId: x.moduleId    
   }));  
 }
 
-let query_modules = async (connectString:string) : Promise<Device[]> => {
+let query_modules = async (connectString: string, input:IoTHubModuleInputType): Promise<Module[]> => {
   let registry = iothub.Registry.fromConnectionString(connectString);
-  let results = await registry.list();
-  let devices = results.responseBody;
-  return createGqlType(devices);
+  let result = null;////getModulesOnDevice
+  
+  if(input.deviceId){
+    if(input.moduleId){
+      result = await registry.getModule(input.deviceId, input.moduleId);
+    }else{
+      result = await registry.getModulesOnDevice(input.deviceId);
+    }
+  }
+  if(result){
+    let modules = result.responseBody;
+    return createGqlType(modules);
+  }else{
+    return [];
+  }
+
 }
 
-let query_device = async (connectString: string, input:IoTHubDeviceInputType): Promise<Device[]> => {
-  let registry = iothub.Registry.fromConnectionString(connectString);
-  let result = await registry.get(input.deviceId);
-  let device = result.responseBody;
-  return createGqlType([device]);
-
-}
-
-export class IoTHubDeviceInputType {
-    public deviceId: string = '';
-}
-
-export async function gql_resolver_query_devices (input:IoTHubDeviceInputType, connectString:string) :Promise<Device[]> {
-  return await query_device(connectString, input);
+export async function gql_resolver_query_modules (input:IoTHubModuleInputType, connectString:string) :Promise<Module[]> {
+  return await query_modules(connectString, input);
 }

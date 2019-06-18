@@ -2,6 +2,10 @@ let iothub = require('azure-iothub');
 import {Device} from 'azure-iothub';
 import {ResultWithHttpResponse, RetryOperation} from 'azure-iot-common';
 
+export class IoTHubDeviceInputType {
+  public deviceId: string = '';
+}
+
 let createGqlType = (devices:Device[]):Device[] => {
   return devices.map((x: Device) => ({ 
     deviceId: x.deviceId,
@@ -32,10 +36,6 @@ let query_device = async (connectString: string, input:IoTHubDeviceInputType): P
   let device = result.responseBody;
   return createGqlType([device]);
 
-}
-
-export class IoTHubDeviceInputType {
-    public deviceId: string = '';
 }
 
 export async function gql_resolver_query_devices (input:IoTHubDeviceInputType, connectString:string) :Promise<Device[]> {
