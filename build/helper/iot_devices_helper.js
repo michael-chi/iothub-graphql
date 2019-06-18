@@ -37,26 +37,72 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var iothub = require('azure-iothub');
-var listDevices = function (connectionString) { return __awaiter(_this, void 0, void 0, function () {
-    var registry, devices;
+var createGqlType = function (devices) {
+    return devices.map(function (x) { return ({
+        deviceId: x.deviceId,
+        generationId: x.generationId,
+        etag: x.etag,
+        connectionState: x.connectionState,
+        status: x.status,
+        statusReason: x.statusReason,
+        connectionStateUpdatedTime: x.connectionStateUpdatedTime,
+        statusUpdatedTime: x.statusUpdatedTime,
+        lastActivityTime: x.lastActivityTime,
+        cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
+        capabilities: x.capabilities,
+        authentication: x.authentication
+    }); });
+};
+var query_devices = function (connectString) { return __awaiter(_this, void 0, void 0, function () {
+    var registry, results, devices;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                registry = iothub.Registry.fromConnectionString(connectionString);
+                registry = iothub.Registry.fromConnectionString(connectString);
                 return [4 /*yield*/, registry.list()];
             case 1:
-                devices = _a.sent();
-                return [2 /*return*/, devices];
+                results = _a.sent();
+                devices = results.responseBody;
+                return [2 /*return*/, createGqlType(devices)];
         }
     });
 }); };
-function list_devices(connectString) {
+var query_device = function (connectString, input) { return __awaiter(_this, void 0, void 0, function () {
+    var registry, result, device;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                registry = iothub.Registry.fromConnectionString(connectString);
+                return [4 /*yield*/, registry.get(input.deviceId)];
+            case 1:
+                result = _a.sent();
+                device = result.responseBody;
+                return [2 /*return*/, createGqlType([device])];
+        }
+    });
+}); };
+var IoTHubDeviceInputType = /** @class */ (function () {
+    function IoTHubDeviceInputType() {
+        this.deviceId = '';
+    }
+    return IoTHubDeviceInputType;
+}());
+exports.IoTHubDeviceInputType = IoTHubDeviceInputType;
+function gql_resolver_query_devices(input, connectString) {
     return __awaiter(this, void 0, void 0, function () {
-        var results, devices;
+        var registry, results, devices;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, listDevices(connectString)];
-                case 1:
+                case 0:
+                    if (!input.deviceId) return [3 /*break*/, 2];
+                    return [4 /*yield*/, query_device(connectString, input)];
+                case 1: return [2 /*return*/, _a.sent()];
+                case 2: return [4 /*yield*/, query_devices(connectString)];
+                case 3: return [2 /*return*/, _a.sent()];
+                case 4:
+                    registry = iothub.Registry.fromConnectionString(connectString);
+                    return [4 /*yield*/, registry.list()];
+                case 5:
                     results = _a.sent();
                     devices = results.responseBody;
                     return [2 /*return*/, devices.map(function (x) { return ({
@@ -77,4 +123,4 @@ function list_devices(connectString) {
         });
     });
 }
-exports.list_devices = list_devices;
+exports.gql_resolver_query_devices = gql_resolver_query_devices;

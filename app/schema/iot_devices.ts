@@ -1,14 +1,19 @@
 import { PubSub } from 'graphql-subscriptions';
 import { gql } from 'apollo-server';
-import {list_devices} from '../helper/iot_devices_helper';
+import {gql_resolver_query_devices, IoTHubDeviceInputType} from '../helper/iot_devices_helper';
 import {Device} from 'azure-iothub';
 
 let pubsub = new PubSub();
 
 const typeDefs = gql`
-  extend type Query {
+  " input to create a new post "
+  input IoTHubDeviceInputType {
+    deviceId: String
+  }
+
+  extend type Query{
     " get all devices "
-    devices: [IoTHubDeviceType]
+    devices(input:IoTHubDeviceInputType!): [IoTHubDeviceType]
   }
 
   extend type Mutation {
@@ -21,10 +26,6 @@ const typeDefs = gql`
     deviceUpserted: IoTHubDeviceType
   }
 
-  " input to create a new post "
-  input IoTHubDeviceInputType {
-    text: String
-  }
   type IoTHubDeviceCapabilitityType{
     iotEdge: Boolean
   }
@@ -58,13 +59,12 @@ const typeDefs = gql`
   }
 `;
 
-
 export default {
   resolvers: {
     Query: {
       // get devices
-      devices: (root: any, { input }: any, {connectionString}: any) => {
-        return list_devices(connectionString);
+      devices: (root: any, {input}: any, {connectionString}: any) => {
+        return gql_resolver_query_devices(input, connectionString);
       },
     },
     Mutation: {
