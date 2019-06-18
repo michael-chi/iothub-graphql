@@ -1,6 +1,5 @@
 let iothub = require('azure-iothub');
-import {Device, Module} from 'azure-iothub';
-import {ResultWithHttpResponse, RetryOperation} from 'azure-iot-common';
+import { Module} from 'azure-iothub';
 
 export class IoTHubModuleInputType {
   public deviceId: string = '';
