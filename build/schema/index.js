@@ -9,8 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = require("lodash");
 var apollo_server_1 = require("apollo-server");
-var iot_devices_1 = __importDefault(require("./iot_devices"));
-var port = process.env.PORT || 3000;
+var iot_devices_resolvers_1 = __importDefault(require("../graphql/iot_devices_resolvers"));
 // create our schema
 function withArraysConcatination(objValue, srcValue) {
     // if an array, concat it
@@ -33,7 +32,7 @@ var rawSchemas = exports.mergeRawSchemas({
         apollo_server_1.gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n                   type Query {\n                      _empty: String\n                  }\n                  type Mutation {\n                      _empty: String\n                  }\n                  type Subscription {\n                      _empty: String\n                  }\n              "], ["\n                   type Query {\n                      _empty: String\n                  }\n                  type Mutation {\n                      _empty: String\n                  }\n                  type Subscription {\n                      _empty: String\n                  }\n              "]))),
     ],
     resolvers: {},
-}, iot_devices_1.default);
+}, iot_devices_resolvers_1.default);
 // let rawSchemas = mergeRawSchemas(
 //     devices
 // );

@@ -1,10 +1,11 @@
 const { ApolloServer, gql } = require('apollo-server');
 import { makeExecutableSchema } from 'graphql-tools';
-import { graphqlSchemas } from './schema';
+import { graphqlSchemas } from './graphql';
 import { Config } from 'apollo-server';
 
 let schemas = makeExecutableSchema(graphqlSchemas);
 
+const port = process.env.PORT || 4000;
 const apolloConfig: Config = {
   schema: schemas,
   context: async ({ req }) => {
@@ -17,6 +18,6 @@ const apolloConfig: Config = {
 
 const server = new ApolloServer(apolloConfig);
 
-server.listen(4000).then((u:any) => {
+server.listen(port).then((u:any) => {
   console.log(`🚀  Server ready at ${u.url}`);
 });

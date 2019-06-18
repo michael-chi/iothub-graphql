@@ -1,8 +1,8 @@
 import { mergeWith, isArray, merge } from 'lodash';
 import { gql, IExecutableSchemaDefinition } from 'apollo-server';
-import devices from './iot_devices';
-
-const port = process.env.PORT || 3000;
+import devices from './resolver/iot_devices';
+import modules from './resolver/iot_modules';
+import commons from './resolver/iot_commons';
 
 // create our schema
 function withArraysConcatination(objValue:any, srcValue:any) {
@@ -17,7 +17,6 @@ export const mergeRawSchemas = (...schemas: IExecutableSchemaDefinition[]):
     IExecutableSchemaDefinition => {
   return mergeWith({}, ...schemas, withArraysConcatination);
 };
-
 
 let rawSchemas =  mergeRawSchemas(
     {
@@ -37,7 +36,9 @@ let rawSchemas =  mergeRawSchemas(
       ],
       resolvers: {},
     },
+    commons,
     devices,
+    modules
   );
 
 // let rawSchemas = mergeRawSchemas(

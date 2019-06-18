@@ -38,8 +38,9 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var _a = require('apollo-server'), ApolloServer = _a.ApolloServer, gql = _a.gql;
 var graphql_tools_1 = require("graphql-tools");
-var schema_1 = require("./schema");
-var schemas = graphql_tools_1.makeExecutableSchema(schema_1.graphqlSchemas);
+var graphql_1 = require("./graphql");
+var schemas = graphql_tools_1.makeExecutableSchema(graphql_1.graphqlSchemas);
+var port = process.env.PORT || 4000;
 var apolloConfig = {
     schema: schemas,
     context: function (_a) {
@@ -55,6 +56,6 @@ var apolloConfig = {
     }
 };
 var server = new ApolloServer(apolloConfig);
-server.listen(4000).then(function (u) {
+server.listen(port).then(function (u) {
     console.log("\uD83D\uDE80  Server ready at " + u.url);
 });
