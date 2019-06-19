@@ -3,6 +3,7 @@ import { gql, IExecutableSchemaDefinition } from 'apollo-server';
 import devices from './resolver/iot_devices';
 import modules from './resolver/iot_modules';
 import commons from './resolver/iot_commons';
+import deviceTwins from './resolver/iot_device_twins';
 
 // create our schema
 function withArraysConcatination(objValue:any, srcValue:any) {
@@ -38,7 +39,8 @@ let rawSchemas =  mergeRawSchemas(
     },
     commons,
     modules,
-    devices
+    devices,
+    deviceTwins
   );
 
 export let schema = rawSchemas.typeDefs;

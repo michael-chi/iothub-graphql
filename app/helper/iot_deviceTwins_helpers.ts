@@ -3,41 +3,27 @@ import {Device} from 'azure-iothub';
 import {IoTHubDeviceInputType} from '../graphql/types/IoTHubDeviceInputType';
 
 
-let createGqlType = (devices:Device[]):Device[] => {
-  return devices.map((x: Device) => ({ 
+let createGqlType = (x:any):any => {
+  return {
     deviceId: x.deviceId,
-    generationId: x.generationId,
     etag: x.etag,
-    connectionState: x.connectionState,
-    status: x.status,
-    statusReason: x.statusReason,
-    connectionStateUpdatedTime: x.connectionStateUpdatedTime,
-    statusUpdatedTime: x.statusUpdatedTime,
-    lastActivityTime: x.lastActivityTime,
-    cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
-    capabilities: x.capabilities,
-    authentication: x.authentication
-  }));  
+    moduleId: x.moduleId,
+    tags : x.tags ? JSON.stringify(x.tags) : '',
+    properties: x.properties ? JSON.stringify(x.properties) : ''
+  };
 }
 
-let query_devices = async (connectString:string) : Promise<Device[]> => {
+let query_deviceTwins = async (connectString: string, input:IoTHubDeviceInputType): Promise<Device[]> => {
   let registry = iothub.Registry.fromConnectionString(connectString);
-  let results = await registry.list();
-  let devices = results.responseBody;
-  return createGqlType(devices);
+  if(!input.deviceId){
+    throw '[Exception]no deviceId specified';
+  }
+  console.debug(`[query_deviceTwins]${JSON.stringify(input)}`);
+  let result = await registry.getTwin(input.deviceId);
+  let twins = result.responseBody;
+  return createGqlType(twins);
 }
 
-let query_device = async (connectString: string, input:IoTHubDeviceInputType): Promise<Device[]> => {
-  let registry = iothub.Registry.fromConnectionString(connectString);
-  let result = await registry.get(input.deviceId);
-  let device = result.responseBody;
-  return createGqlType([device]);
-
-}
-
-export async function gql_resolver_query_devices (input:IoTHubDeviceInputType, connectString:string) :Promise<Device[]> {
-  if(input.deviceId)
-    return await query_device(connectString, input);
-  else
-    return await query_devices(connectString);
+export async function gql_resolver_query_deviceTwins (input:IoTHubDeviceInputType, connectString:string) :Promise<Device[]> {
+  return await query_deviceTwins(connectString, input);
 }

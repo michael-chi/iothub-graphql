@@ -38,5 +38,6 @@ export let schema_IotHubDevices = gql`
     capabilities: IoTHubDeviceCapabilitityType
     authentication: IoTHubAuthenticationType
     modules: [IoTHubModuleType]
+    deviceTwins: IoTHubDeviceTwinType
   }
 `;

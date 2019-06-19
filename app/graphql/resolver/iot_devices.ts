@@ -1,5 +1,5 @@
 import { PubSub } from 'graphql-subscriptions';
-import {gql_resolver_query_devices} from '../../helper/iot_devices_helpers';//'../../helper/iot_devices_helpers';
+import {gql_resolver_query_devices} from '../../helper/iot_devices_helpers';
 import {schema_IotHubDevices} from '../schema/iot_devices_schema';
 import {gql_resolver_query_modules} from '../../helper/iot_modules_helper'
 

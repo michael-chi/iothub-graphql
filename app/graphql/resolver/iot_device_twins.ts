@@ -1,21 +1,31 @@
 import { PubSub } from 'graphql-subscriptions';
-import {gql_resolver_query_devices} from '../../helper/iot_devices_helpers';//'../../helper/iot_devices_helpers';
 import {schema_IotHubDeviceTwins} from '../schema/iot_deviceTwins_schema';
-import {gql_resolver_query_modules} from '../../helper/iot_modules_helper'
-
+import {gql_resolver_query_deviceTwins} from '../../helper/iot_deviceTwins_helpers';
 let pubsub = new PubSub();
 
 export default {
   resolvers: {
-    IoTHubDeviceTwinType: {
-      modules: (parent: any, input: any, {connectionString}: any) => 
+    IoTHubDeviceType: {
+      deviceTwins: (parent: any, {input}: any, {connectionString}: any) => 
         {
-          return {};
+          if(parent){
+            console.log(`[IoTHubDeviceType.deviceTwins::resolver]${JSON.stringify(parent)}`);
+            return gql_resolver_query_deviceTwins({deviceId:parent.deviceId},connectionString);
+          }else{
+            console.log(`[IoTHubDeviceType.deviceTwins::resolver]${JSON.stringify(input)}`);
+            return gql_resolver_query_deviceTwins(input,connectionString);
+          }
         }
     },
     Query: {
-      devices: (root: any, {input}: any, {connectionString}: any) => {
-        return {};
+      deviceTwins: (parent: any, {input}: any, {connectionString}: any) => {
+        if(parent){
+          console.log(`[deviceTwins::resolver]${JSON.stringify(parent)}`);
+          return gql_resolver_query_deviceTwins({deviceId:parent.deviceId},connectionString);
+        }else{
+          console.log(`[deviceTwins::resolver]${JSON.stringify(input)}`);
+          return gql_resolver_query_deviceTwins(input,connectionString);
+        }
       },
     },
     Mutation: {
