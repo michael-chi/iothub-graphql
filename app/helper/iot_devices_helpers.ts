@@ -68,10 +68,6 @@ export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType, c
     }
   }
   if(!device){
-    //  create
-    // let options = {deviceId:input.deviceId, capabilities:input.capabilitities};
-    // console.log(`[gql_resolver_upsert_device]creating deivce, options ${JSON.stringify(options)}`);
-
     device = await registry.create(input)
     let x = createGqlType(device.responseBody);
     console.log(`[gql_resolver_upsert_device]created ${x.deviceId}`);
