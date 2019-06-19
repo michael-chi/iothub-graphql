@@ -20,8 +20,6 @@ export default {
     },
     Mutation: {
       upsertDevice:  async (root: any, { input }: any, {connectionString}: any) => {
-        //console.log(`[iot_devices::mutation]root:${JSON.stringify(root)}`);
-        //console.log(`[iot_devices::mutation]input:${JSON.stringify(input)}`);
         return gql_resolver_upsert_device(input, connectionString);
 
       },
