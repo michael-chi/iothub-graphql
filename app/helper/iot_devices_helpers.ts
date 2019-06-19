@@ -69,17 +69,20 @@ export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType, c
   }
   if(!device){
     //  create
-    let registry = iothub.Registry.fromConnectionString(connectString);
-    let options = {deviceId:input.deviceId, capabilities:input.capabilitities};
-    console.log(`[gql_resolver_upsert_device]creating deivce, options ${JSON.stringify(options)}`);
+    // let options = {deviceId:input.deviceId, capabilities:input.capabilitities};
+    // console.log(`[gql_resolver_upsert_device]creating deivce, options ${JSON.stringify(options)}`);
 
-    device = await registry.create({deviceId:input.deviceId, capabilities:input.capabilitities})
+    device = await registry.create(input)
     let x = createGqlType(device.responseBody);
     console.log(`[gql_resolver_upsert_device]created ${x.deviceId}`);
     
     return x;
   }else{
     //  update
-    return {deviceId :''};
+    device = await registry.update(input);
+    let x = createGqlType(device.responseBody);
+    console.log(`[gql_resolver_upsert_device]updated ${x.deviceId}`);
+    
+    return x;
   }
 }
