@@ -2,9 +2,6 @@ let iothub = require('azure-iothub');
 import {Device} from 'azure-iothub';
 import {IoTHubDeviceInputType} from '../graphql/types/IoTHubDeviceInputType';
 
-// export class IoTHubDeviceInputType {
-//   public deviceId: string = '';
-// }
 
 let createGqlType = (devices:Device[]):Device[] => {
   return devices.map((x: Device) => ({ 
