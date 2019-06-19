@@ -1,5 +1,6 @@
 IoT Hub | GraphQL
 =================
+This is a Type Script and GraphQL up skilling project which aiming to make myself familiar with GraphQL and Type Script - but also try to build a GraphQL based API to allow applications query, insert, delete and update IoT Hub devices. 
 
 # Execute Locally
 
