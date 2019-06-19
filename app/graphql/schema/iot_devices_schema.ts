@@ -14,6 +14,8 @@ export let schema_IotHubDevices = gql`
   extend type Mutation {
     " add or update an IoT Device "
     upsertDevice(input: IoTHubDeviceInputType!): IoTHubDeviceType
+    " delete an IoT Device "
+    deleteDevice(input:String) :Boolean
   }
 
   extend type Subscription {
