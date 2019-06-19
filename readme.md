@@ -232,3 +232,6 @@ let rawSchemas =  mergeRawSchemas(
     //      , identities
   );
 ``` 
+
+# Notes
+- Azure IoT SDK only allows updating device capabilities
