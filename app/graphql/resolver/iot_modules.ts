@@ -15,14 +15,12 @@ export default {
       },
     },
     Mutation: {
-      upsertDevice:  async (root: any, { input }: any, context: any) => {
-          return null;
-      },
+      
     },
     Subscription: {
-        deviceUpserted: {
+        moduleUpserted: {
         subscribe: (root:any, args:any, context:any) => {
-          return pubsub.asyncIterator('deviceUpserted');
+          return pubsub.asyncIterator('moduleUpserted');
         },
       },
     },
