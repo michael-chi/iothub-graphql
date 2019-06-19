@@ -18,7 +18,7 @@ extend type Mutation {
 
 extend type Subscription {
   " called when a new post is created "
-  moduleUpsert: IoTHubModuleType
+  moduleUpserted: IoTHubModuleType
 }
 
 type IoTHubModuleType {

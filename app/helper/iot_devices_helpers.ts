@@ -50,6 +50,19 @@ export async function gql_resolver_query_devices (input:IoTHubDeviceInputType, c
     return await query_devices(connectString);
 }
 
+export async function gql_resolver_delete_device(input:string, connectString: string): Promise<Boolean> {
+  console.log(`[gql_resolver_delete_device]deleting device ${input}...`);  
+  try{
+    let registry = iothub.Registry.fromConnectionString(connectString);
+    let result = await registry.delete(input);
+    console.log(`[gql_resolver_delete_device]deleting device...`);  
+    return true;
+  }catch(ex){
+    console.log(`[Exception][gql_resolver_delete_device]error while deleting device:${ex}`);
+    throw ex;
+  }
+}
+
 export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType, connectString:string) :Promise<Device> {
   let device = null;
   let result = null;
