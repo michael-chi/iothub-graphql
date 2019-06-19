@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server';
 
 export let schema_IotHubModules = gql`
-" input to create a new post "
 input IoTHubModuleInputType {
   deviceId: String
   moduleId: String

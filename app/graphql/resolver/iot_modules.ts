@@ -15,7 +15,6 @@ export default {
       },
     },
     Mutation: {
-      // create a post
       upsertDevice:  async (root: any, { input }: any, context: any) => {
           return null;
       },

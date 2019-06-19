@@ -1,10 +1,7 @@
 let iothub = require('azure-iothub');
 import { Module} from 'azure-iothub';
 import {IoTHubModuleInputType} from '../graphql/types/IoTHubModuleInputType';
-// export class IoTHubModuleInputType {
-//   public deviceId: string = '';
-//   public moduleId: string = '';
-// }
+
 let createGqlType = (modules:Module[]):Module[] => {
   return modules.map((x: Module) => ({ 
     authentication: x.authentication,
