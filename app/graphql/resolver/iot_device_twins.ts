@@ -20,10 +20,10 @@ export default {
     Query: {
       deviceTwins: (parent: any, {input}: any, {connectionString}: any) => {
         if(parent){
-          console.log(`[deviceTwins::resolver]${JSON.stringify(parent)}`);
+          //console.log(`[deviceTwins::resolver]${JSON.stringify(parent)}`);
           return gql_resolver_query_deviceTwins({deviceId:parent.deviceId},connectionString);
         }else{
-          console.log(`[deviceTwins::resolver]${JSON.stringify(input)}`);
+          //console.log(`[deviceTwins::resolver]${JSON.stringify(input)}`);
           return gql_resolver_query_deviceTwins(input,connectionString);
         }
       },

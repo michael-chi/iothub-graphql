@@ -1,7 +1,7 @@
 import { PubSub } from 'graphql-subscriptions';
-import {gql_resolver_query_devices} from '../../helper/iot_devices_helpers';
+import {gql_resolver_upsert_device, gql_resolver_query_devices} from '../../helper/iot_devices_helpers';
+import {gql_resolver_query_modules} from '../../helper/iot_modules_helper';
 import {schema_IotHubDevices} from '../schema/iot_devices_schema';
-import {gql_resolver_query_modules} from '../../helper/iot_modules_helper'
 
 let pubsub = new PubSub();
 
@@ -19,8 +19,11 @@ export default {
       },
     },
     Mutation: {
-      upsertDevice:  async (root: any, { input }: any, context: any) => {
-          return null;
+      upsertDevice:  async (root: any, { input }: any, {connectionString}: any) => {
+        //console.log(`[iot_devices::mutation]root:${JSON.stringify(root)}`);
+        //console.log(`[iot_devices::mutation]input:${JSON.stringify(input)}`);
+        return gql_resolver_upsert_device(input, connectionString);
+
       },
     },
     Subscription: {

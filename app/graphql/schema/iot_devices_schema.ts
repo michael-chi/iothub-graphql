@@ -2,7 +2,8 @@ import { gql } from 'apollo-server';
 
 export let schema_IotHubDevices = gql`
   input IoTHubDeviceInputType {
-    deviceId: String
+    deviceId: String!
+    capabilities : IoTHubDeviceCapabilitityInputType
   }
 
   extend type Query{
