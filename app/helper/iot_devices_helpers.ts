@@ -61,8 +61,7 @@ export async function gql_resolver_delete_device(input:string, connectString: st
     throw ex;
   }
 }
-
-export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType[], context:any) :Promise<Device[]> {
+async function upsert_devices (input:IoTHubDeviceInputType[], context:any) :Promise<Device[]> {
   let device = null;
   let {connectionString, dataloaders} = context;
 
@@ -72,32 +71,51 @@ export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType[],
     let registry = iothub.Registry.fromConnectionString(connectionString);
     let devices = await deviceIds.map(async (deviceId) => {
       console.log(`procesisng ${deviceId} | ${connectionString}`);
-      let device = await registry.get(deviceId);
-      if(device){
-        return createGqlType(device.responseBody);
-      }else{
+      try{
+        let device = await registry.get(deviceId);
+        if(device){
+          return createGqlType(device.responseBody);
+        }else{
+          return {deviceId:deviceId, isNew:true};
+        }
+      }catch(ex){
         return {deviceId:deviceId, isNew:true};
       }
     });
     return devices;
   });
   let result:Device[] = [];
-  input.forEach(async element => {
+  //Cannot block call hence use for loop
+  //TODO: better way of using input.forEach(async element => {
+  for(var index = 0; index < input.length; index ++)
+  {
+    let element:IoTHubDeviceInputType = input[index];
     let device = await dataloaders['upsert_devices'].load(element.deviceId);
     if(device)
     {
         if(device.isNew){
           console.log(`[gql_resolver_upsert_device]creating new device ${device.deviceId}`);
-          let newDevice = await registry.create(input)
+          let newDevice = await registry.create(element);
           let x = createGqlType(newDevice.responseBody);
           result.push(x);
         }else{
-          console.log(`[gql_resolver_upsert_device]updating new device ${device.deviceId}`);
-          let updatedDevice = await registry.update(input);
+          console.log(`[gql_resolver_upsert_device]updating device ${device.deviceId}`);
+          let updatedDevice = await registry.update(element);
+          console.log(`[gql_resolver_upsert_device]updated=${JSON.stringify(updatedDevice.responseBody)}`);
           let x = createGqlType(updatedDevice.responseBody);
           result.push(x);
         }
+    }else{
+      console.log(`[gql_resolver_upsert_device]creating new device ${device.deviceId}`);
+      let newDevice = await registry.create(element)
+      let x = createGqlType(newDevice.responseBody);
+      result.push(x);
     }
-  });
+  };
+  console.log('========================');
+  console.log(`[gql_resolver_upsert_device]result=${JSON.stringify(result)}`);
   return result;
+}
+export async function gql_resolver_upsert_device (input:IoTHubDeviceInputType[], context:any) :Promise<Device[]> {
+  return await upsert_devices (input, context);
 }
