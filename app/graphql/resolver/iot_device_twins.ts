@@ -6,25 +6,25 @@ let pubsub = new PubSub();
 export default {
   resolvers: {
     IoTHubDeviceType: {
-      deviceTwins: (parent: any, {input}: any, {connectionString}: any) => 
+      deviceTwins: (parent: any, {input}: any, context: any) => 
         {
           if(parent){
             console.log(`[IoTHubDeviceType.deviceTwins::resolver]${JSON.stringify(parent)}`);
-            return gql_resolver_query_deviceTwins({deviceId:parent.deviceId},connectionString);
+            return gql_resolver_query_deviceTwins([{deviceId:parent.deviceId}], context);
           }else{
             console.log(`[IoTHubDeviceType.deviceTwins::resolver]${JSON.stringify(input)}`);
-            return gql_resolver_query_deviceTwins(input,connectionString);
+            return gql_resolver_query_deviceTwins(input, context);
           }
         }
     },
     Query: {
-      deviceTwins: (parent: any, {input}: any, {connectionString}: any) => {
+      deviceTwins: (parent: any, {input}: any, context: any) => {
         if(parent){
           //console.log(`[deviceTwins::resolver]${JSON.stringify(parent)}`);
-          return gql_resolver_query_deviceTwins({deviceId:parent.deviceId},connectionString);
+          return gql_resolver_query_deviceTwins([{deviceId:parent.deviceId}],context);
         }else{
           //console.log(`[deviceTwins::resolver]${JSON.stringify(input)}`);
-          return gql_resolver_query_deviceTwins(input,connectionString);
+          return gql_resolver_query_deviceTwins(input,context);
         }
       },
     },

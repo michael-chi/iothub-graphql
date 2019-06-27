@@ -15,14 +15,12 @@ export default {
         }
     },
     Query: {
-      devices: (root: any, {input}: any, {connectionString}: any) => {
-        return gql_resolver_query_devices(input, connectionString);
+      devices: (root: any, {input}: any, context: any) => {
+        return gql_resolver_query_devices(input, context);
       },
     },
     Mutation: {
       upsertDevice:  async (root: any, { input }: any, {connectionString}: any) => {
-        //console.log(`[iot_devices::mutation]root:${JSON.stringify(root)}`);
-        //console.log(`[iot_devices::mutation]input:${JSON.stringify(input)}`);
         return gql_resolver_upsert_device(input, connectionString);
 
       },

@@ -2,20 +2,20 @@ import { gql } from 'apollo-server';
 
 export let schema_IotHubDevices = gql`
   input IoTHubDeviceInputType {
-    deviceId: String!
+    deviceId: String
     capabilities : IoTHubDeviceCapabilitityInputType
   }
 
   extend type Query{
     " get all devices "
-    devices(input:IoTHubDeviceInputType!): [IoTHubDeviceType]
+    devices(input:[IoTHubDeviceInputType!]!): [IoTHubDeviceType]
   }
 
   extend type Mutation {
     " add or update an IoT Device "
-    upsertDevice(input: IoTHubDeviceInputType!): IoTHubDeviceType
+    upsertDevice(input: [IoTHubDeviceInputType!]!): [IoTHubDeviceType]
     " delete an IoT Device "
-    deleteDevice(input:String) :Boolean
+    deleteDevice(input:[String]) :Boolean
   }
 
   extend type Subscription {
