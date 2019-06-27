@@ -1,7 +1,7 @@
 let iothub = require('azure-iothub');
 import {Device} from 'azure-iothub';
 import {IoTHubDeviceInputType} from '../graphql/types/IoTHubDeviceInputType';
-
+const DataLoader = require('dataloader');
 
 let createGqlType = (x:any):any => {
   return {
@@ -13,17 +13,28 @@ let createGqlType = (x:any):any => {
   };
 }
 
-let query_deviceTwins = async (connectString: string, input:IoTHubDeviceInputType): Promise<Device[]> => {
-  let registry = iothub.Registry.fromConnectionString(connectString);
-  if(!input.deviceId){
+let query_deviceTwins = async (input:IoTHubDeviceInputType[], context:any) => {
+  if(!input){
     throw '[Exception]no deviceId specified';
   }
+  
+  let {dataloaders, connectionString} = context;
+  let registry = iothub.Registry.fromConnectionString(connectionString);
+
   console.debug(`[query_deviceTwins]${JSON.stringify(input)}`);
-  let result = await registry.getTwin(input.deviceId);
-  let twins = result.responseBody;
-  return createGqlType(twins);
+
+  dataloaders['query_deviceTwins'] = new DataLoader(async (deviceIds:string[]) =>{
+    let registry = iothub.Registry.fromConnectionString(connectionString);
+    let twins = await deviceIds.map(async (deviceId) => {
+      console.log(`procesisng ${deviceId} | ${connectionString}`);
+      let twins = await registry.getTwin(deviceId);
+      return createGqlType(twins.responseBody);
+    });
+    return twins;
+  });
+  return await dataloaders['query_deviceTwins'].loadMany(await input.map(a => a.deviceId));
 }
 
-export async function gql_resolver_query_deviceTwins (input:IoTHubDeviceInputType, connectString:string) :Promise<Device[]> {
-  return await query_deviceTwins(connectString, input);
+export async function gql_resolver_query_deviceTwins (input:IoTHubDeviceInputType[], context:any) {
+  return await query_deviceTwins(input, context);
 }
