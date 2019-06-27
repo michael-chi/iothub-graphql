@@ -9,7 +9,8 @@ let createGqlType = (x:any):any => {
     etag: x.etag,
     moduleId: x.moduleId,
     tags : x.tags ? JSON.stringify(x.tags) : '',
-    properties: x.properties ? JSON.stringify(x.properties) : ''
+    properties: x.properties ? JSON.stringify(x.properties) : '',
+    twinProperties: x.properties
   };
 }
 

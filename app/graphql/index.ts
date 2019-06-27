@@ -4,7 +4,7 @@ import devices from './resolver/iot_devices';
 import modules from './resolver/iot_modules';
 import commons from './resolver/iot_commons';
 import deviceTwins from './resolver/iot_device_twins';
-
+import scalar_types from './resolver/graphql_scalar_twinProperty';
 // create our schema
 function withArraysConcatination(objValue:any, srcValue:any) {
   // if an array, concat it
@@ -40,7 +40,8 @@ let rawSchemas =  mergeRawSchemas(
     commons,
     modules,
     devices,
-    deviceTwins
+    deviceTwins,
+    scalar_types
   );
 
 export let schema = rawSchemas.typeDefs;

@@ -17,8 +17,6 @@ type IoTHubCertificateThumbprintType {
   secondaryThumbprint: String
 }
 
-
-
 input IoTHubSASKeyKeyPairInputType{
   primaryKey: String
   secondaryKey: String
@@ -36,4 +34,5 @@ input IoTHubCertificateThumbprintInputType {
 input IoTHubDeviceCapabilitityInputType{
   iotEdge: Boolean
 }
+
 `;

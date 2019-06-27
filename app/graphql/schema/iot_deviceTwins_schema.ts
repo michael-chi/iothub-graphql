@@ -22,5 +22,6 @@ export let schema_IotHubDeviceTwins = gql`
     moduleId: String
     tags: String
     properties: String
+    twinProperties: IoTDeviceTwinPropertyType
   }
 `;
