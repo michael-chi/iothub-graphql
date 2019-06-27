@@ -1,19 +1,77 @@
--   Query Devices
+- Query DeviceTwin
 ```
-query test {
-  devices{
+{
+	"operationName":"iothub",
+	"variables":
+		{"input":
+			{"deviceId":"michi-visionaikit-001"}
+		},
+		"query":
+			"query iothub($input: IoTHubDeviceInputType!) {\n  deviceTwins(input: $input) {\n    deviceId\n    etag\n}\n}\n"
+	}
+```
+
+- Query Device with DeviceTwins
+```
+//  Query
+query devices_query($input: [IoTHubDeviceInputType!]!) {
+  devices(input: $input) {
+    deviceId
+    etag
+    deviceTwins {
+      deviceId
+      moduleId
+    }
+    capabilities {
+      iotEdge
+    }
+    modules {
+      moduleId
+      etag
+      connectionState
+    }
+  }
+}
+//  Input
+{
+  "input": [
+     {"deviceId": "device002"}
+  ]
+}
+```
+
+- Update or Create Device
+```
+//  Query
+mutation device_mutation_test_001($input: [IoTHubDeviceInputType!]!) 
+{  upsertDevice(input: $input) 
+  {
     deviceId
     generationId
     etag
     cloudToDeviceMessageCount
+    capabilities {
+      iotEdge
+    }
+    modules{
+      moduleId
+      
+    }
+    deviceTwins{
+      tags
+      etag
+      properties
+    }
   }
 }
-```
-
-```
-{"operationName":"iothub","variables":{"input":{"deviceId":"device001"}},"query":"query iothub($input: IoTHubDeviceInputType!) {\n  devices(input: $input) {\n    deviceId\n    generationId\n    etag\n    cloudToDeviceMessageCount\n    capabilities {\n      iotEdge\n    }\n  }\n}\n"}
-```
-
-```
-{"operationName":"iothub","variables":{"input":{}},"query":"query iothub($input: IoTHubDeviceInputType!) {\n  devices(input: $input) {\n    deviceId\n    generationId\n    etag\n    cloudToDeviceMessageCount\n    capabilities {\n      iotEdge\n    }\n  }\n}\n"}
+//  Input
+{
+  "input":
+		[
+      {
+        "deviceId":"device002-20190627-001",
+        "capabilities":{"iotEdge":true}
+      }
+    ]
+}
 ```
