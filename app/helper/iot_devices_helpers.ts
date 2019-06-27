@@ -2,6 +2,7 @@ let iothub = require('azure-iothub');
 import {Device} from 'azure-iothub';
 import {IoTHubDeviceInputType} from '../graphql/types/IoTHubDeviceInputType';
 import {IoTHubDeviceCapabilitityInputType} from '../graphql/types/IoTHubDeviceCapabilitityInputType';
+import {asyncForEach} from '../helper/array_util';
 const DataLoader = require('dataloader');
 let createGqlTypes = (devices:Device[]):Device[] => {
   if(devices)
@@ -49,12 +50,19 @@ export async function gql_resolver_query_devices (input:IoTHubDeviceInputType[],
   return await query_devices(context, await input.map(d => d.deviceId));
 }
 
-export async function gql_resolver_delete_device(input:string, connectString: string): Promise<Boolean> {
+export async function gql_resolver_delete_device(input:string[], context: any): Promise<Boolean> {
   console.log(`[gql_resolver_delete_device]deleting device ${input}...`);  
   try{
-    let registry = iothub.Registry.fromConnectionString(connectString);
-    let result = await registry.delete(input);
-    console.log(`[gql_resolver_delete_device]deleting device...`);  
+    let {connectionString} = context;
+    let registry = iothub.Registry.fromConnectionString(connectionString);
+    
+    //for(var element in input) 
+    await asyncForEach(input, async (element:any) =>
+    {
+      let result = await registry.delete(element);
+      console.log(`[gql_resolver_delete_device]deleting device...${result}`);  
+    });
+    
     return true;
   }catch(ex){
     console.log(`[Exception][gql_resolver_delete_device]error while deleting device:${ex}`);
@@ -85,11 +93,9 @@ async function upsert_devices (input:IoTHubDeviceInputType[], context:any) :Prom
     return devices;
   });
   let result:Device[] = [];
-  //Cannot block call hence use for loop
-  //TODO: better way of using input.forEach(async element => {
-  for(var index = 0; index < input.length; index ++)
+  //Array.ForEach is non-blocking:https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
+  await asyncForEach(input, async (element:any) =>
   {
-    let element:IoTHubDeviceInputType = input[index];
     let device = await dataloaders['upsert_devices'].load(element.deviceId);
     if(device)
     {
@@ -111,7 +117,7 @@ async function upsert_devices (input:IoTHubDeviceInputType[], context:any) :Prom
       let x = createGqlType(newDevice.responseBody);
       result.push(x);
     }
-  };
+  });
   console.log('========================');
   console.log(`[gql_resolver_upsert_device]result=${JSON.stringify(result)}`);
   return result;
