@@ -13,7 +13,7 @@ let createGqlType = (x:any):any => {
   };
 }
 
-let query_deviceTwins = async (input:IoTHubDeviceInputType[], context:any) => {
+let query_deviceTwin = async (input:IoTHubDeviceInputType, context:any) => {
   if(!input){
     throw '[Exception]no deviceId specified';
   }
@@ -28,13 +28,19 @@ let query_deviceTwins = async (input:IoTHubDeviceInputType[], context:any) => {
     let twins = await deviceIds.map(async (deviceId) => {
       console.log(`procesisng ${deviceId} | ${connectionString}`);
       let twins = await registry.getTwin(deviceId);
-      return createGqlType(twins.responseBody);
+      console.log(`[query_deviceTwins]twins=${JSON.stringify(twins.responseBody)}`);
+      let result = createGqlType(twins.responseBody);
+      console.log('===============');
+      console.log(`[query_deviceTwins]result=${JSON.stringify(result)}`);
+      return result;
     });
     return twins;
   });
-  return await dataloaders['query_deviceTwins'].loadMany(await input.map(a => a.deviceId));
+  let loaded = await dataloaders['query_deviceTwins'].load([input.deviceId]);
+  console.log(`================\r\n${JSON.stringify(loaded)}`);
+  return loaded;
 }
 
-export async function gql_resolver_query_deviceTwins (input:IoTHubDeviceInputType[], context:any) {
-  return await query_deviceTwins(input, context);
+export async function gql_resolver_query_deviceTwin (input:IoTHubDeviceInputType, context:any) {
+  return await query_deviceTwin(input, context);
 }
