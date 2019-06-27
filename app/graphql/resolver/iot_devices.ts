@@ -20,13 +20,13 @@ export default {
       },
     },
     Mutation: {
-      upsertDevice:  async (root: any, { input }: any, {connectionString}: any) => {
-        return gql_resolver_upsert_device(input, connectionString);
+      upsertDevice:  async (root: any, { input }: any, context: any) => {
+        return await gql_resolver_upsert_device(input, context);
 
       },
-      deleteDevice: async (root:any, {input}:any, {connectionString}:any) => {
+      deleteDevice: async (root:any, {input}:any, context:any) => {
         console.log(`[iot_devices::delete]deleting device...`);
-        return gql_resolver_delete_device(input, connectionString);
+        return await gql_resolver_delete_device(input, context);
       }
     },
     Subscription: {
