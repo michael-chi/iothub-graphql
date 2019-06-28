@@ -60,7 +60,7 @@ mutation device_mutation_test_001($input: [IoTHubDeviceInputType!]!)
     deviceTwins{
       tags
       etag
-      properties
+      twinProperties
     }
   }
 }
