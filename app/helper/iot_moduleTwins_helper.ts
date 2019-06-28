@@ -3,20 +3,13 @@ import { Module, Twin} from 'azure-iothub';
 import {IoTHubModuleInputType} from '../graphql/types/IoTHubModuleInputType';
 import {asyncForEach} from '../helper/array_util';
 
-let createGqlType = (x:Twin):Twin => {
-  return x;
-  // return { 
-  //   authentication: x.authentication,
-  //   cloudToDeviceMessageCount: x.cloudToDeviceMessageCount,
-  //   connectionState: x.connectionState,
-  //   connectionStateUpdatedTime: x.connectionStateUpdatedTime,
-  //   deviceId: x.deviceId,
-  //   etag: x.etag,
-  //   generationId: x.generationId,
-  //   lastActivityTime: x.lastActivityTime,
-  //   managedBy: x.managedBy,
-  //   moduleId: x.moduleId    
-  // };  
+let createGqlType = (x:Twin):any => {
+  return { 
+    deviceId: x.deviceId,
+    etag: x.etag,
+    moduleId: x.moduleId,
+    twinProperties: x.properties    
+  };  
 }
 
 let query_moduleTwins = async (input:IoTHubModuleInputType, context:any): Promise<Twin | null> => {
