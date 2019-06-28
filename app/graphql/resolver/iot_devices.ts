@@ -22,7 +22,6 @@ export default {
     Mutation: {
       upsertDevice:  async (root: any, { input }: any, context: any) => {
         return await gql_resolver_upsert_device(input, context);
-
       },
       deleteDevice: async (root:any, {input}:any, context:any) => {
         console.log(`[iot_devices::delete]deleting device...`);

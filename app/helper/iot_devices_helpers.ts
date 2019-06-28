@@ -3,6 +3,7 @@ import {Device} from 'azure-iothub';
 import {IoTHubDeviceInputType} from '../graphql/types/IoTHubDeviceInputType';
 import {IoTHubDeviceCapabilitityInputType} from '../graphql/types/IoTHubDeviceCapabilitityInputType';
 import {asyncForEach} from '../helper/array_util';
+import { update_twins } from './iot_deviceTwins_helpers';
 const DataLoader = require('dataloader');
 let createGqlTypes = (devices:Device[]):Device[] => {
   if(devices)
@@ -94,27 +95,32 @@ async function upsert_devices (input:IoTHubDeviceInputType[], context:any) :Prom
   });
   let result:Device[] = [];
   //Array.ForEach is non-blocking:https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
-  await asyncForEach(input, async (element:any) =>
+  await asyncForEach(input, async (element:IoTHubDeviceInputType) =>
   {
     let device = await dataloaders['upsert_devices'].load(element.deviceId);
+    let x = null;
     if(device)
     {
         if(device.isNew){
           console.log(`[gql_resolver_upsert_device]creating new device ${device.deviceId}`);
           let newDevice = await registry.create(element);
-          let x = createGqlType(newDevice.responseBody);
-          result.push(x);
+          x = createGqlType(newDevice.responseBody);
         }else{
           console.log(`[gql_resolver_upsert_device]updating device ${device.deviceId}`);
           let updatedDevice = await registry.update(element);
           console.log(`[gql_resolver_upsert_device]updated=${JSON.stringify(updatedDevice.responseBody)}`);
-          let x = createGqlType(updatedDevice.responseBody);
-          result.push(x);
+          x = createGqlType(updatedDevice.responseBody);
         }
     }else{
       console.log(`[gql_resolver_upsert_device]creating new device ${device.deviceId}`);
       let newDevice = await registry.create(element)
-      let x = createGqlType(newDevice.responseBody);
+      x = createGqlType(newDevice.responseBody);
+    }
+    if(x){
+      let {twinProperties} = element;
+      if(twinProperties){
+        let updatedTwin = update_twins(element, context);
+      }
       result.push(x);
     }
   });

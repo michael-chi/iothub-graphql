@@ -4,7 +4,4 @@ import { gql } from 'apollo-server';
 export let schema_GraphQLScalarTypes = gql`
 scalar IoTDeviceTwinPropertyType
 
-extend type Query{
-    twinProperties(input:String!): IoTDeviceTwinPropertyType
-  }
 `;

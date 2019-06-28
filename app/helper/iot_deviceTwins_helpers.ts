@@ -45,3 +45,26 @@ let query_deviceTwin = async (input:IoTHubDeviceInputType, context:any) => {
 export async function gql_resolver_query_deviceTwin (input:IoTHubDeviceInputType, context:any) {
   return await query_deviceTwin(input, context);
 }
+
+export async function update_twins(deviceInfo:IoTHubDeviceInputType, context:any){
+
+  if(!deviceInfo){
+    return null;
+  }
+  let {twinProperties, deviceId} = deviceInfo;
+  let {dataloaders, connectionString} = context;
+  let registry = iothub.Registry.fromConnectionString(connectionString);
+  if(!twinProperties || (!twinProperties.desired && !twinProperties.tags) ){
+    return null;
+  }
+    
+  let twinResult = await registry.getTwin(deviceId);
+  let twin = twinResult.responseBody;
+  
+  let twinDesired = twinProperties.desired ? JSON.parse(twinProperties.desired) : twin.properties.desired;
+  
+  let twinTags = twinProperties.tags ? JSON.parse(twinProperties.tags) : twin.properties.tags;
+  let twinPath = { tags:twinTags, properties: { desired:twinDesired }};
+  let result = await registry.updateTwin(deviceId, twinPath, twin.etag);
+  return result.responseBody;
+}
