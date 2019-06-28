@@ -4,8 +4,13 @@ export let schema_IotHubDevices = gql`
   input IoTHubDeviceInputType {
     deviceId: String
     capabilities : IoTHubDeviceCapabilitityInputType
+    twinProperties : IoTHubDeviceTwinInputType
   }
 
+  input IoTHubDeviceTwinInputType{
+    tags: String
+    desired: String
+  }
   extend type Query{
     " get all devices "
     devices(input:[IoTHubDeviceInputType!]!): [IoTHubDeviceType]
