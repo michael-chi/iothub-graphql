@@ -32,5 +32,6 @@ type IoTHubModuleType {
   lastActivityTime: String
   managedBy: String
   moduleId: String
+  moduleTwins:IoTHubDeviceTwinType
 }
 `;
