@@ -31,7 +31,7 @@
     "graphql-import-node": "0.0.4",
     "graphql-schema-typescript": "^1.2.9",
     "http": "0.0.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "ncp": "^2.0.0",
     "react": "^16.8.6",
     "ts-node-dev": "^1.0.0-pre.40"
